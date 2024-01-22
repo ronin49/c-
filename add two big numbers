@@ -1,0 +1,74 @@
+#include <iostream>
+#include <string.h>
+class character {
+    public:
+    character *next = 0;
+    character *prev = 0;
+    char value = '0';
+    character(char value, character *prev, character *next) {
+        this->value = value;
+        this->next = next;
+        this->prev = prev;
+    }
+};
+
+class string {
+    public:
+    string() {}
+    string(char* s) {
+        character *p = 0;
+        for(int i = 0; i < strlen(s); i++) {
+            char c = s[i];
+            if(!first) {
+                first = p = new character(c,0,0);
+                continue;
+            }
+            p = p->next = new character(c,p,0);
+        }
+    }
+    character *first = 0;
+    void add_to_begin(char c) {
+        first = new character(c,0,first);
+    }
+    void add_to_begin(int i) {
+        first = new character('0'+i,0,first);
+    }
+    void print() {
+        character *p = first;
+        while(p) {
+            std::cout << p->value;
+            p = p->next;
+        }
+        std::cout << std::endl;
+    }
+};
+
+string add(string s1, string s2) {
+    s1.print();
+    s2.print();
+    character *p1 = s1.first; while(p1->next) p1 = p1->next;
+    character *p2 = s2.first; while(p2->next) p2 = p2->next;
+    std::cout << p1->value << std::endl;
+    std::cout << p2->value << std::endl;
+    string s3;
+    int s;
+    int ostachia = 0;
+    while(p1 || p2 || ostachia) {
+        s = ostachia;
+        if(p1) s += p1->value-'0';
+        if(p2) s += p2->value-'0';
+        if(s >= 10) {
+            s-=10;
+            ostachia = 1;
+        } else ostachia = 0;
+        s3.add_to_begin(s);
+        if(p1) p1 = p1->prev;
+        if(p2) p2 = p2->prev;
+        //std::cout << (long)p1 << std::endl;
+    }
+    s3.print();
+}
+
+int main() {
+    add("111111111111999","999");
+}
